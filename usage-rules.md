@@ -54,6 +54,11 @@ being asked. The topic files under `usage-rules/` carry the reasoning and exampl
   `refute html =~ "text"` against rendered HTML.
 - Pass the actor in tests too; `authorize?: false` hides what the test should prove.
 
+## Enforcement
+- `mix credo --strict` runs the mechanical half of these rules through the
+  `PlangoraElixirRules.Credo` plugin; a check you disable for a line needs a comment
+  saying why. Run it (through the project's `lint` alias) before opening a pull request.
+
 ## Repository
 - No plan, report or design files committed (`docs/` and `.superpowers/` are ignored).
 - No commented-out code, no shims, no dead defensive code.
