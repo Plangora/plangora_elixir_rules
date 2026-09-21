@@ -21,13 +21,16 @@ defmodule PlangoraElixirRules.Check.Ash.ForeignKeyInAccept do
             change manage_relationship(:project_id, :project, type: :append_and_remove)
           end
 
-      The params map callers pass is unchanged. The one accepted exception is
-      a foreign key that is part of an upsert identity's conflict target; mark
+      Only the foreign keys of relationships declared on the resource are
+      flagged, so a plain `github_id` or `storage_id` attribute is not. The
+      params map callers pass is unchanged. The one accepted exception is a
+      foreign key that is part of an upsert identity's conflict target; mark
       that line with `# credo:disable-for-next-line` and say why.
       """,
       params: [excluded_paths: "Paths or regexes to skip (defaults to test directories)."]
     ]
 
+  alias AshCredo.Introspection
   alias AshCredo.Orchestration
   alias PlangoraElixirRules.Check.Helpers
 
@@ -36,18 +39,35 @@ defmodule PlangoraElixirRules.Check.Ash.ForeignKeyInAccept do
     if AshCredo.PathFilter.excluded?(filename, Params.get(params, :excluded_paths, __MODULE__)) do
       []
     else
-      Orchestration.flat_map_resource_section(source_file, params, :actions, fn sections,
-                                                                                issue_meta ->
-        Enum.flat_map(sections, &issues_in_section(&1, issue_meta))
+      Orchestration.flat_map_resource_context(source_file, params, fn context, issue_meta ->
+        relationship_keys = relationship_keys(context)
+
+        context
+        |> Introspection.resource_sections(:actions)
+        |> Enum.flat_map(&issues_in_section(&1, relationship_keys, issue_meta))
       end)
     end
   end
 
-  defp issues_in_section(section, issue_meta) do
+  # Only the foreign keys of relationships declared on this resource: a
+  # `github_id` or `storage_id` is an attribute, not a relationship.
+  defp relationship_keys(context) do
+    context
+    |> Introspection.resource_sections(:relationships)
+    |> Enum.flat_map(&Helpers.entity_calls(&1, [:belongs_to, :has_one, :has_many, :many_to_many]))
+    |> Enum.map(&Helpers.entity_name/1)
+    |> Enum.reject(&is_nil/1)
+    |> Enum.map(&String.to_atom("#{&1}_id"))
+    |> MapSet.new()
+  end
+
+  defp issues_in_section(section, relationship_keys, issue_meta) do
     accepts =
       section
       |> Helpers.entity_calls([:accept, :default_accept])
-      |> Enum.flat_map(fn {_name, meta, [list]} -> foreign_keys(list, meta) end)
+      |> Enum.flat_map(fn {_name, meta, [list]} ->
+        foreign_keys(list, meta, relationship_keys)
+      end)
 
     defaults =
       section
@@ -56,8 +76,11 @@ defmodule PlangoraElixirRules.Check.Ash.ForeignKeyInAccept do
         list
         |> List.wrap()
         |> Enum.flat_map(fn
-          {_action, accepted} when is_list(accepted) -> foreign_keys(accepted, meta)
-          _ -> []
+          {_action, accepted} when is_list(accepted) ->
+            foreign_keys(accepted, meta, relationship_keys)
+
+          _ ->
+            []
         end)
       end)
 
@@ -72,13 +95,13 @@ defmodule PlangoraElixirRules.Check.Ash.ForeignKeyInAccept do
     end)
   end
 
-  defp foreign_keys(list, meta) when is_list(list) do
+  defp foreign_keys(list, meta, relationship_keys) when is_list(list) do
     line = Keyword.get(meta, :line, 1)
 
     list
-    |> Enum.filter(&(is_atom(&1) and String.ends_with?(Atom.to_string(&1), "_id")))
+    |> Enum.filter(&(is_atom(&1) and MapSet.member?(relationship_keys, &1)))
     |> Enum.map(&{&1, line})
   end
 
-  defp foreign_keys(_, _), do: []
+  defp foreign_keys(_, _, _), do: []
 end

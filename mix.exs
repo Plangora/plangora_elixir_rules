@@ -1,7 +1,7 @@
 defmodule PlangoraElixirRules.MixProject do
   use Mix.Project
 
-  @version "0.2.0"
+  @version "0.2.1"
   @source_url "https://github.com/Plangora/plangora_elixir_rules"
 
   def project do

@@ -9,12 +9,17 @@ defmodule PlangoraElixirRules.Check.Ash.ForeignKeyInAcceptTest do
       use Ash.Resource, domain: MyApp.Projects, data_layer: AshPostgres.DataLayer
 
       actions do
-        default_accept [:title, :project_id]
+        default_accept [:title, :project_id, :github_id]
         defaults [:read, create: [:column_id]]
 
         update :move do
           accept [:position, :column_id]
         end
+      end
+
+      relationships do
+        belongs_to :project, MyApp.Project
+        belongs_to :column, MyApp.Column
       end
     end
     """
@@ -51,6 +56,10 @@ defmodule PlangoraElixirRules.Check.Ash.ForeignKeyInAcceptTest do
         create :create do
           accept [:project_id]
         end
+      end
+
+      relationships do
+        belongs_to :project, MyApp.Project
       end
     end
     """
