@@ -75,7 +75,6 @@ that never run mix still see the same rules.
 | Dates through `Localize` | `PlangoraElixirRules.Check.Web.StrftimeInWeb` |
 | Factory functions called bare | `PlangoraElixirRules.Check.Test.FactoryModulePrefix` |
 | `async: true` | `PlangoraElixirRules.Check.Test.AsyncFalse` |
-| No `refute html =~` | `PlangoraElixirRules.Check.Test.RefuteRenderedHtml` |
 
 Every check documents itself: `mix credo explain PlangoraElixirRules.Check.Ash.MissingPublic`.
 The template checks only see `~H` sigils in `.ex` files; `.heex` templates are not

@@ -24,7 +24,7 @@ grep -rnE '<(button|a |select|input |textarea)' lib/*_web/ | grep -v 'type="hidd
 grep -rnE '<%= (if|for|case) ' lib/*_web/
 grep -rnE 'String\.to_(existing_)?atom|Calendar\.strftime|Enum\.sort' lib/*_web/
 # tests
-grep -rnE 'async: false|Plangora\.Factory\.|refute .*=~' test/
+grep -rnE 'async: false|Plangora\.Factory\.' test/
 grep -rnE 'Ash\.(create|Seed\.seed)!?\(' test/
 # migrations
 mix ash.codegen --check

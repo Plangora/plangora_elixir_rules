@@ -50,8 +50,8 @@ being asked. The topic files under `usage-rules/` carry the reasoning and exampl
 - Records come from the factory: `generate(user())` / `user() |> generate()`; factory
   functions are imported, never called as `Plangora.Factory.user()`.
 - `async: true` everywhere; use Mox instead of global config.
-- Assert with `Ash.count!/2`, `Ash.get!/2`, `has_element?/2`; never
-  `refute html =~ "text"` against rendered HTML.
+- Assert with `Ash.count!/2`, `Ash.get!/2`, `has_element?/2`; `assert`/`refute html =~`
+  on rendered HTML is fine too.
 - Pass the actor in tests too; `authorize?: false` hides what the test should prove.
 
 ## Enforcement

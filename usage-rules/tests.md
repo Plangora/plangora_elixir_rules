@@ -34,8 +34,8 @@ cannot be async says why in a comment.
 - Counts with `Ash.count!/2` ("we can just run a count is probably more clear: make sure it's `0`").
 - Fetch with `Ash.get!/2`; clear with `Ash.bulk_destroy!`.
 - Verify the database effect, not only the response ("let's also verify that it's created in the database").
-- Never `refute html =~ "text"` against rendered HTML: HTML escaping and SVG path data
-  make it unsound. Assert on a DOM id with `has_element?/2` or `element/2`.
+- Both `assert html =~ "text"` and `refute html =~ "text"` on rendered HTML are fine;
+  use `has_element?/2` or `element/2` when a DOM id is the clearer target.
 - Shared `load_actor/1` goes in `setup`.
 - Delete pointless tests ("pointless test", "remove this file, useless").
 

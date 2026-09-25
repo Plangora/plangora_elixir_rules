@@ -59,8 +59,7 @@ defmodule PlangoraElixirRules.Credo do
             {PlangoraElixirRules.Check.Web.EexControlFlow, []},
             {PlangoraElixirRules.Check.Web.StrftimeInWeb, []},
             {PlangoraElixirRules.Check.Test.FactoryModulePrefix, []},
-            {PlangoraElixirRules.Check.Test.AsyncFalse, []},
-            {PlangoraElixirRules.Check.Test.RefuteRenderedHtml, []}
+            {PlangoraElixirRules.Check.Test.AsyncFalse, []}
           ]
         }
       }
