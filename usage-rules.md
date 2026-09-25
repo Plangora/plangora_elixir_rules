@@ -15,6 +15,8 @@ being asked. The topic files under `usage-rules/` carry the reasoning and exampl
 - Permission rules are policies, not validations. Prefer `expr(...)` checks over check
   modules; no `require Ash.Expr` in a check.
 - Enums are `Ash.Type.Enum` with `gettext` labels. Every user-facing message is `gettext`.
+- Derived values (totals, costs, budget usage) are calculations and aggregates on the
+  resource, not service-module or LiveView functions: cached, exposed in the API, unit-tested.
 - Load related data with the parent (`load:`), sort in the query, aggregate in the
   resource, search through a `read :search` action with `contains/2`, find-or-create
   through `create` with `upsert? true`.

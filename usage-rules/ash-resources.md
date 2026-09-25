@@ -138,6 +138,14 @@ An attribute constrained with `one_of` becomes an enum type. Validation and poli
 - Sort in the query (`Ash.Query.sort`), never in memory ("sort within the query, not within memory").
 - Derived numbers are calculations ("we can make a single calculation which adds these together");
   counts are aggregates; "the default X" is a filtered `has_one`.
+- Business logic that derives values from a resource (totals, costs, margins, budget
+  usage, "which rate applied on this date") lives on the resource as calculations,
+  aggregates and relationships -- not in a service module or a LiveView helper
+  ("we should prefer to use calculations, aggregations, and these kinds of ash constructs").
+  They are cached once loaded, reachable from the API (AshGraphql) without rebuilding
+  the logic, and unit-testable with `Ash.load!/3`. Prefer expression calculations so they
+  run in SQL and compose into other expressions and aggregates; hide sensitive ones with
+  field policies instead of a hand-written permission check.
 - Search is a `read :search` action with a `:ci_string` argument and `contains/2`, not
   a hand-built `ilike` ("you can use `contains` and also setup a search action that can do this with an argument").
 
