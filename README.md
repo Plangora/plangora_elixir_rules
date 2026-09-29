@@ -18,7 +18,7 @@ The package ships two things:
 
    ```elixir
    {:plangora_elixir_rules,
-    git: "git@github.com:Plangora/plangora_elixir_rules.git", tag: "v0.1.0",
+    github: "Plangora/plangora_elixir_rules", tag: "v0.3.1",
     only: [:dev, :test], runtime: false}
    ```
 
