@@ -23,6 +23,7 @@ grep -rnE 'use Ash\.Type\.Enum' -l lib/ | xargs grep -L gettext
 grep -rnE '<(button|a |select|input |textarea)' lib/*_web/ | grep -v 'type="hidden"\|live_file_input'
 grep -rnE '<%= (if|for|case) ' lib/*_web/
 grep -rnE 'String\.to_(existing_)?atom|Calendar\.strftime|Enum\.sort' lib/*_web/
+grep -rnE 'params_to_page_opts|FilterForm|@streams\.' lib/*_web/
 # tests
 grep -rnE 'async: false|Plangora\.Factory\.' test/
 grep -rnE 'Ash\.(create|Seed\.seed)!?\(' test/
@@ -38,8 +39,10 @@ mix ash.codegen --check
 2. Every action that sets a relationship: `argument` + `manage_relationship`.
 3. Every Ash call: an actor. Every remaining `authorize?: false`: a one-line reason.
 4. Every LiveView: components, `:if`/`:for`, gettext, Localize, `AshPhoenix.Form`
-   with `field=`, `Ash.can?` for gating, no nested `case`, single `assign`.
-5. Every test: factory + `generate/1`, `async: true`, sound assertions, actor passed.
+   with `field=`, `Ash.can?` for gating, no nested `case`, single `assign`; lists are
+   `Cinder.collection`s in the house shape, refreshed after saves.
+5. Every test: factory + `generate/1`, `async: true`, sound assertions, actor passed;
+   `render_async/1` before asserting on a Cinder list.
 6. Style: no single-call pipes, one-use helpers inlined, `@moduledoc` everywhere.
 7. Repository: no plan/report files, no commented-out code, no shims.
 

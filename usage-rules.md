@@ -40,6 +40,10 @@ being asked. The topic files under `usage-rules/` carry the reasoning and exampl
 - `AshPhoenix.Form` with `field={@form[:x]}`; `prepare_params` for derived fields.
 - `Localize` for every date, time, number and currency; `display_name` for people.
 - Admin-only screens live under `/admin`.
+- Paginated lists over a resource are `Cinder.collection`s with `url_state`, the
+  `:list_search` query as an assign, `<.list_search>` for text search and
+  `Cinder.Refresh.refresh_table/2` after a save (see `cinder`); `<.table>` is only for
+  short in-memory lists.
 
 ## Style
 - Pipe only when there are two or more calls in the chain; a single call is written

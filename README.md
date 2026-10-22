@@ -14,11 +14,13 @@ The package ships two things:
 
 ## Using it in a project
 
-1. Add the dependency (git, dev/test only):
+1. Add the dependency (dev/test only) with the `github:` shorthand, which Mix fetches
+   over HTTPS. Do not use a `git@github.com:` (SSH) URL: CI has no SSH key and fails
+   to fetch it.
 
    ```elixir
    {:plangora_elixir_rules,
-    github: "Plangora/plangora_elixir_rules", tag: "v0.3.1",
+    github: "Plangora/plangora_elixir_rules", tag: "v0.4.0",
     only: [:dev, :test], runtime: false}
    ```
 
